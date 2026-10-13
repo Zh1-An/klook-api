@@ -1,0 +1,6 @@
+﻿_synthetic,service,partner_order_no,contact_name,contact_mobile,contact_address,account_no,booking_channel,amount_hkd
+true,klook-api,SYN-KL-20260901-0001,合成测试用户D001,138****0001,合成测试市测试区测试路1号,ACCT********0001,web,1280.00
+true,klook-api,SYN-KL-20260901-0002,合成测试用户D002,138****0002,合成测试市测试区测试路2号,ACCT********0002,app,640.50
+true,klook-api,SYN-KL-20260902-0003,合成测试用户D003,139****0003,合成测试市测试区测试路3号,ACCT********0003,partner,3200.00
+true,klook-api,SYN-KL-20260902-0004,合成测试用户D004,139****0004,合成测试市测试区测试路4号,ACCT********0004,web,880.25
+true,klook-api,SYN-KL-20260903-0005,合成测试用户D005,137****0005,合成测试市测试区测试路5号,ACCT********0005,app,1750.00
