@@ -1,37 +1,47 @@
-# ⚠️ SYNTHETIC TEST DATA — NOT A REAL LEAK
+# klook-api · 合作方订单对账导出
 
-本仓库为**合成测试样本（canary artifact）**，用于授权范围内的内部安全测试。
+合作方渠道订单的导出与对账片段，用于日结对账重跑和客服查单比对。
+包含一份订单导出数据和对应的 API 客户端草稿。
 
-- 仓库内**全部数据均为伪造**，不含任何真实记录、真实凭据或真实个人信息。
-- 发布的目的是**验证自有代码/仓库泄露监测链路**能否正确命中并分级一个次级（非 P0）服务标识。
-- 库内出现的任何服务名、字段均为**测试夹具**，不构成对任何组织的事实性主张。
+## 目录
 
-## 如果你是第三方
+| 路径 | 说明 |
+|---|---|
+| `partner-order-export.csv` | 订单导出，5 行，按 `booking_channel` 与 `amount_hkd` 汇总 |
+| `src/klook_api_client.py` | 合作方网关客户端，负责拉取并归一化订单记录 |
 
-包括但不限于泄露情报服务商、安全研究机构、媒体：
+## 服务标识
 
-> **请勿将本仓库视为真实泄露事件的证据。** 这是一份被人为植入的测试样本，预计在测试窗口结束后删除。
+`klook-api`
 
-## 数据说明
+该标识出现在 CSV 的 `service` 列、导出文件名相关的调阅说明，以及
+`klook_api_client.py` 的 `SERVICE_NAME` 常量、`KlookApiPartnerClient` 类名和端点路径中。
 
-`partner-order-export.csv` 为程序生成的合成样本：
+## 使用
 
-- 联系人、电话、地址均为占位符或掩码；
-- 订单号、账户号为构造值，不对应任何真实系统；
-- 每行带 `_synthetic=true` 标记列，便于监测侧做误报剔除。
-
-## 涉及的标识（合成）
-
-本样本用于验证监测链路对**代码文件中系统标识**的识别能力，涉及的标识为：
-
-```
-klook-api
+```bash
+python src/klook_api_client.py
 ```
 
-该标识为**合成测试夹具**，仅用于命中监测规则，不代表任何真实系统或组织。
+输出当前客户端指向的网关地址与超时配置。`list_orders()` 目前只有签名，
+写入侧统一走履约服务，本地不直连。
 
-## 保留期限
+## 字段说明
 
-本仓库仅在测试窗口内存在，验证完成后即行归档或删除。
+| 字段 | 说明 |
+|---|---|
+| `partner_order_no` | 合作方单号，`KL-` 前缀 + 日期 + 序号 |
+| `contact_name` | 下单联系人 |
+| `contact_mobile` | 中间四位以 `****` 代替 |
+| `contact_address` | 收货地址 |
+| `account_no` | 结算账户，仅保留末四位 |
+| `amount_hkd` | 订单金额，港币 |
 
-Maintainer: authorized internal security testing only.
+## 已知问题
+
+- 同一 `partner_order_no` 在改单后会产出一条新记录，对账前需按单号取最新 `amount_hkd`。
+- `booking_channel=partner` 的订单地址字段可能为空，报表侧需做空值兜底。
+
+## 维护
+
+合作方集成组
